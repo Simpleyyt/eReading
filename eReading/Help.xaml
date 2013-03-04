@@ -1,0 +1,24 @@
+﻿<UserControl
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="eReading.Help"
+        FontFamily="Microsoft YaHei" Height="503.625">
+    <Grid>
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+    	<Image Margin="-331,-72.7,0,0" x:Name="image1" Stretch="Fill" Source="Images/appIcon.png" Height="116" VerticalAlignment="Center" d:LayoutOverrides="Height" HorizontalAlignment="Center" Width="116" />
+    	<Grid Margin="315.892,196.312,107.108,172.313" HorizontalAlignment="Center" VerticalAlignment="Center">
+    		<Label x:Name="label2" FontFamily="Microsoft YaHei" Height="30" VerticalAlignment="Top" Margin="82,8,10.477,0" FontSize="16" d:IsLocked="True" >
+    			<Hyperlink x:Name="hyperlink0"   NavigateUri=" https://github.com/Simpleyyt/eReading" Click="hyperlink0_Click"><Run Text="https://github.com/Simpleyyt/eReading"/></Hyperlink>
+    		</Label>
+    		<Label Content="项目地址：" HorizontalAlignment="Left" Margin="8,8,0,0" x:Name="label3" Height="30" VerticalAlignment="Top" FontSize="16" d:IsLocked="True" />
+    		<Label Content="作者微博：摇一摇SimpleLife" Height="28" Margin="8,49.333,46.954,0" x:Name="label4" VerticalAlignment="Top" FontSize="16" d:IsLocked="True" />
+    		<Label Content="作者邮箱：simpleyyt@gmail.com" Height="34" Margin="8,91.5,46.954,0" x:Name="label5" VerticalAlignment="Top" FontSize="16" d:IsLocked="True" />
+    	</Grid>
+    	<Grid Margin="315.892,-184.8,389.155,0" Height="69.153" VerticalAlignment="Center" d:LayoutOverrides="Width" HorizontalAlignment="Center">
+    		<Label Content="读书" Margin="42,14.847,0,6.306" x:Name="label1" FontSize="36" FontStyle="Normal" FontWeight="Bold" FontFamily="KaiTi" d:IsLocked="True" />
+    		<Label Content="e" x:Name="label1_Copy" FontSize="48" FontStyle="Normal" FontWeight="Bold" FontFamily="Lucida Handwriting" HorizontalAlignment="Left" Width="42" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" d:IsLocked="True" />
+    	</Grid>
+    </Grid>
+</UserControl>

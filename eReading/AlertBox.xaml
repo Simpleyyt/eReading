@@ -1,0 +1,31 @@
+﻿<UserControl
+	xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+	xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+	xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+	xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+	mc:Ignorable="d"
+	x:Class="eReading.AlertBox"
+	x:Name="UserControl" Width="365" Height="190">
+
+	<Grid Background="#7F000000">
+		<Border BorderThickness="1" Background="White" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Center" Width="365" Height="185">
+			<Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="138*" />
+                    <RowDefinition Height="45*" />
+                </Grid.RowDefinitions>
+                <TextBlock Margin="120,50,8,4" x:Name="Msg" Foreground="Black" FontSize="16" TextWrapping="Wrap" Text="网络连接不正常！"/>
+				<Label Content="错误" FontSize="16" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="40.6" FontWeight="Bold" Margin="8,6,8,0" VerticalAlignment="Top" HorizontalAlignment="Center" Name="title" />
+				<Path Data="M8,52.713333 L448,48.713333" Height="2" Stretch="Fill" StrokeThickness="2" Stroke="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Margin="8,44,8,0" VerticalAlignment="Top"/>
+				<Border HorizontalAlignment="Left" Margin="17,49,0,2" Width="87" d:LayoutOverrides="VerticalAlignment">
+					<Grid>
+						<Ellipse Stroke="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" StrokeThickness="5" Width="80" Height="80"/>
+						<TextBlock Margin="35,3.473,32.806,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="64" FontFamily="Stencil Std" Text="!" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" d:LayoutOverrides="Width" HorizontalAlignment="Center"/>
+					</Grid>
+				</Border>
+				<Path Data="M8,52.713333 L448,48.713333" Height="2" Stretch="Fill" VerticalAlignment="Bottom" StrokeThickness="2" Stroke="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Margin="17,0,21,43" HorizontalAlignment="Center" Grid.Row="1" />
+				<Button Content="确定" VerticalAlignment="Stretch" Margin="5" Template="{DynamicResource ButtonControlTemplate1}" FontSize="16" Cursor="Hand" HorizontalAlignment="Stretch" Width="Auto" Grid.Row="1" Name="Submit" Click="Submit_Click" />
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

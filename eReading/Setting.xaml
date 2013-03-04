@@ -1,0 +1,47 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d" x:Class="eReading.Setting"
+        Title="设置" Height="586" Width="472" ResizeMode="NoResize" Closing="Window_Closing" WindowStyle="ToolWindow">
+    <Grid>
+    	<Border BorderThickness="5" BorderBrush="White" >
+    		<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" >
+    			<StackPanel x:Name="taskList">
+    				<GroupBox Header="下载设置" Height="130" x:Name="groupBox4" Padding="10" Width="Auto">
+    					<Grid>
+    						<Label Content="路径：" Height="28" HorizontalAlignment="Left" Margin="6,6,0,0" VerticalAlignment="Top" />
+    						<TextBox Height="23" HorizontalAlignment="Left" Margin="58,6,0,0" x:Name="downloadDir" VerticalAlignment="Top" Width="179" Text="E:\e-book" />
+    						<Button Content="..." Height="23" HorizontalAlignment="Left" Margin="243,6,0,0" x:Name="dirButton" VerticalAlignment="Top" Width="25" Click="dirButton_Click" />
+    						<Label Content="平台：" Height="28" HorizontalAlignment="Left" Margin="6,40,0,0" x:Name="label4" VerticalAlignment="Top" />
+    						<ComboBox Height="23" HorizontalAlignment="Left" Margin="58,45,0,0" x:Name="Plaform" VerticalAlignment="Top" Width="210" Panel.ZIndex="0" SelectedIndex="0">
+    							<ComboBoxItem Content="文献港" />
+    							<ComboBoxItem Content="读秀（更多资源，限校内网）" />
+    						</ComboBox>
+    					</Grid>
+    				</GroupBox>
+    				<GroupBox Header="数据库设置" Height="207" x:Name="groupBox3" Padding="10" Width="Auto">
+    					<Grid>
+    						<Label Content="dx号：" Height="28" HorizontalAlignment="Left" Margin="6,6,0,0" VerticalAlignment="Top" />
+    						<Label Content= "str:" Height="28" HorizontalAlignment="Left" Margin="6,40,0,0" VerticalAlignment="Top" />
+    						<Label Content="数据库路径：" Height="28" HorizontalAlignment="Left" Margin="6,81,0,0" VerticalAlignment="Top" />
+    						<TextBox Height="23" HorizontalAlignment="Left" Margin="58,6,0,0" x:Name="ssid" VerticalAlignment="Top" Width="200" />
+    						<TextBox Height="23" HorizontalAlignment="Left" Margin="58,42,0,0" x:Name="str" VerticalAlignment="Top" Width="200" />
+    						<TextBox Height="23" HorizontalAlignment="Left" Margin="85,81,0,0" VerticalAlignment="Top" Width="173" IsEnabled="False" x:Name="databaseDir" />
+    						<Button Content="录入" Height="23" HorizontalAlignment="Left" Margin="285.5,42,0,0" x:Name="refreshDB" VerticalAlignment="Top" Width="53" Click="refreshDB_Click" d:LayoutOverrides="VerticalAlignment" />
+    						<RadioButton Content="使用本地数据库" Height="16" HorizontalAlignment="Left" Margin="8,118,0,0" x:Name="radioButton1" VerticalAlignment="Top" IsChecked="True" IsEnabled="False" />
+    						<RadioButton Content="使用网络数据库" Height="16" HorizontalAlignment="Left" Margin="8,140,0,0" x:Name="radioButton2" VerticalAlignment="Top" IsEnabled="False" />
+    					</Grid>
+    				</GroupBox>
+    				<GroupBox Header="Cookies设置" Height="170"  x:Name="groupBox2"  Width="Auto" Padding="10">
+    					<Grid>
+    						<CheckBox Content="使用默认Cookies" Height="16" HorizontalAlignment="Left" IsEnabled="True" Margin="6,94,0,0" x:Name="defaultCookies" VerticalAlignment="Top" IsChecked="True" Click="defaultCookies_Click" />
+    						<Label Content="Cookies：" Height="28" HorizontalAlignment="Left" Margin="6,6,0,0" VerticalAlignment="Top" />
+    						<TextBox Height="61" HorizontalAlignment="Left" Margin="6,27,0,0" x:Name="Cookies" VerticalAlignment="Top" Width="410" TextWrapping="Wrap"/>
+    					</Grid>
+    				</GroupBox>
+    			</StackPanel>
+    		</ScrollViewer>
+    	</Border>
+        <Button Content="保存" Height="29" HorizontalAlignment="Left" Margin="184,524,0,0" x:Name="save" VerticalAlignment="Top" Width="91" Click="save_Click" />
+    </Grid>
+</Window>

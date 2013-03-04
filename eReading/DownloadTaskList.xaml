@@ -1,0 +1,40 @@
+﻿<UserControl
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:my="clr-namespace:eReading" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" x:Name="userControl" mc:Ignorable="d" x:Class="eReading.DownloadTaskList"
+        Height="550" Width="400">
+	<UserControl.Resources>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter2"/>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter1"/>
+		<BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+	</UserControl.Resources>
+    <Grid Background="#80000000">
+		<Border BorderThickness="0" Background="White" CornerRadius="10" HorizontalAlignment="Center" VerticalAlignment="Center" Height="550" Width="400">
+			<Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="42*" />
+                    <RowDefinition Height="452*" />
+                    <RowDefinition Height="54*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+					<ColumnDefinition Width="180*" />
+                    <ColumnDefinition Width="180*" />
+                </Grid.ColumnDefinitions>
+				<ScrollViewer ScrollViewer.VerticalScrollBarVisibility="Auto" Height="Auto" VerticalAlignment="Stretch" Grid.ColumnSpan="2" d:IsLocked="True" Grid.RowSpan="1" Grid.Row="1">
+					<StackPanel x:Name="taskList" Margin="0,5" />
+                </ScrollViewer>
+				<Label Content="下载列表" VerticalAlignment="Top" FontSize="16" Foreground="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" d:LayoutOverrides="Width" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Height="39.6" FontWeight="Bold" Grid.ColumnSpan="2" />
+				<Path Data="M8,52.713333 L448,48.713333" Height="2" Margin="8,41,8,0" Stretch="Fill" VerticalAlignment="Top" StrokeThickness="2" Stroke="{DynamicResource {x:Static SystemColors.HotTrackBrushKey}}" Grid.ColumnSpan="2" Grid.RowSpan="2" />
+				<Canvas HorizontalAlignment="Center" VerticalAlignment="Center" Height="133" Width="107" Margin="122,164,122,155" Grid.ColumnSpan="2" Visibility="{Binding IsEmpty, ConverterParameter=Hidden, Converter={StaticResource BooleanToVisibilityConverter2}, ElementName=userControl, FallbackValue=Visibility}" Grid.Row="1">
+					<Ellipse Stroke="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" StrokeThickness="5" Height="92" Width="92" Canvas.Left="8" Canvas.Top="4" d:IsLocked="True"/>
+					<ed:BlockArrow Orientation="Down" StrokeThickness="5" Fill="{DynamicResource {x:Static SystemColors.ControlBrushKey}}" Height="42" Canvas.Left="33" Canvas.Top="31" Width="42" d:IsLocked="True"/>
+					<Label Content="暂无下载任务" Canvas.Top="96" Background="{x:Null}" Foreground="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" FontWeight="Bold" FontSize="16" d:IsLocked="True"/>
+				</Canvas>
+				<Path Data="M8,52.713333 L448,48.713333" Height="2" Stretch="Fill" VerticalAlignment="Bottom" StrokeThickness="2" Stroke="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" Margin="8,0" Grid.ColumnSpan="2" Grid.Row="1" />
+				<Path Data="M185,425.5 L185,471.5" HorizontalAlignment="Center" Height="42" Stretch="Fill" Stroke="{DynamicResource {x:Static SystemColors.ControlLightBrushKey}}" StrokeThickness="2" VerticalAlignment="Center" Width="2" Margin="0" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="2" Grid.Row="2" />
+				<Button x:Name="close" Content="关闭" VerticalAlignment="Stretch" Margin="5" HorizontalAlignment="Stretch" Width="Auto" Template="{DynamicResource ButtonControlTemplate1}" FontSize="16" Cursor="Hand" Grid.Row="2" Grid.Column="1" Click="close_Click" />
+				<Button Content="清空" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Width="Auto" Margin="5" Template="{DynamicResource ButtonControlTemplate1}" FontSize="16" Cursor="Hand" IsEnabled="False" Grid.Row="2" />
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

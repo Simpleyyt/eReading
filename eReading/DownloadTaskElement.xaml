@@ -1,0 +1,69 @@
+﻿<UserControl x:Class="eReading.DownloadTaskElement"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" Height="65" Width="Auto" d:DesignWidth="475">
+    <Border BorderThickness="0,0,0,1" BorderBrush="{DynamicResource {x:Static SystemColors.AppWorkspaceBrushKey}}" Style="{DynamicResource BorderStyle1}">
+    	<Border.Resources>
+    		<Style x:Key="BorderStyle1" TargetType="{x:Type Border}">
+    			<Style.Triggers>
+    				<Trigger Property="IsMouseOver" Value="True">
+    					<Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.GradientInactiveCaptionBrushKey}}"/>
+    				</Trigger>
+    			</Style.Triggers>
+    			<Setter Property="Background" Value="White"/>
+    		</Style>
+    	</Border.Resources>
+		<Grid>
+			<Label Content="大学生创业案例之我要自己打天下" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Height="19" Margin="31.333,2,10,0" x:Name="title" VerticalAlignment="Top" FontWeight="Normal" FontSize="13" Padding="0" VerticalContentAlignment="Center" />
+			<ProgressBar Height="5" Margin="8,27,8,0" x:Name="progress" VerticalAlignment="Top" Value="0" Visibility="Hidden" />
+			<Label Content="己完成" FontSize="12" Foreground="Black" Margin="8,0,0,10" x:Name="status" FontStretch="Normal" HorizontalContentAlignment="Right" HorizontalAlignment="Left" VerticalAlignment="Bottom" Padding="0" Height="15.547" />
+			<Grid x:Name="openButtons" HorizontalAlignment="Right" Width="99" Height="15.547" VerticalAlignment="Bottom" Margin="0,0,8,8" d:LayoutOverrides="VerticalAlignment" Visibility="Hidden">
+				<Label Content="打开目录" FontSize="12" FontStretch="Normal" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Height="13.333" HorizontalContentAlignment="Left" x:Name="openDir" VerticalAlignment="Top" FontStyle="Normal" MouseUp="openDir_MouseUp" Cursor="Hand" HorizontalAlignment="Right" d:LayoutOverrides="HorizontalAlignment" Padding="0" />
+				<Label Content="打开文件" FontSize="12" FontStretch="Normal" FontStyle="Normal" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" HorizontalAlignment="Left" HorizontalContentAlignment="Left" x:Name="openFile" Width="Auto" MouseUp="openFile_MouseUp" Height="Auto" VerticalAlignment="Top" Cursor="Hand" Padding="0" />
+            </Grid>
+            <Label Content="重试" Cursor="Hand" FontSize="12" FontStretch="Normal" FontStyle="Normal" Foreground="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Height="Auto" HorizontalAlignment="Right" HorizontalContentAlignment="Left" Name="retry" Padding="0" VerticalAlignment="Bottom" Margin="0,0,9,9" Visibility="Hidden" MouseUp="retry_MouseUp" />
+
+            <ToggleButton x:Name="pausestartButton" Content="Button" HorizontalAlignment="Left" Width="18" RenderTransformOrigin="6,0.475" Height="17" VerticalAlignment="Top" Margin="7.999,4,0,0" Template="{DynamicResource ControlButtonControlTemplate}" Cursor="Hand" IsEnabled="False" Click="pausestartButton_Click">
+				<ToggleButton.Resources>
+					<ControlTemplate x:Key="ControlButtonControlTemplate" TargetType="{x:Type ToggleButton}">
+						<Grid x:Name="grid">
+							<Grid.Background>
+								<ImageBrush ImageSource="Images/pause.png"/>
+							</Grid.Background>
+						</Grid>
+						<ControlTemplate.Triggers>
+							<Trigger Property="IsChecked" Value="True">
+								<Setter Property="Background" TargetName="grid">
+									<Setter.Value>
+										<ImageBrush ImageSource="Images/play.png"/>
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+							<Trigger Property="IsEnabled" Value="False">
+								<Setter Property="Background" TargetName="grid">
+									<Setter.Value>
+										<ImageBrush ImageSource="Images/disable.png"/>
+									</Setter.Value>
+								</Setter>
+							</Trigger>
+						</ControlTemplate.Triggers>
+					</ControlTemplate>
+				</ToggleButton.Resources>
+
+			</ToggleButton>
+			<Button x:Name="delete" Content="Button" HorizontalAlignment="Right" VerticalAlignment="Top" Width="12" Template="{DynamicResource DeleteButtonControlTemplate}" Height="12" Margin="0,2.001,10,0" Cursor="Hand" Click="delete_Click">
+				<Button.Resources>
+					<ControlTemplate x:Key="DeleteButtonControlTemplate" TargetType="{x:Type Button}">
+						<Grid>
+							<Grid.Background>
+								<ImageBrush ImageSource="Images/delete.png"/>
+							</Grid.Background>
+						</Grid>
+					</ControlTemplate>
+				</Button.Resources>
+			</Button>
+        </Grid>
+	</Border>
+</UserControl>

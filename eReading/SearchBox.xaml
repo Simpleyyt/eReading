@@ -1,0 +1,44 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:Microsoft_Windows_Themes="clr-namespace:Microsoft.Windows.Themes;assembly=PresentationFramework.Aero"
+	x:Class="eReading.SearchBox"
+	x:Name="UserControl" Height="37.5" Width="224.5" mc:Ignorable="d">
+
+	<Grid x:Name="LayoutRoot">
+		<TextBox VerticalContentAlignment="Center" Style="{DynamicResource searchBoxStyle}" BorderThickness="0" Padding="14,1,41,1" FontStyle="Italic" FontSize="13.333" Name="searchText" LostFocus="searchText_LostFocus" Text="search..." GotFocus="searchText_GotFocus" Foreground="LightGray">
+			<TextBox.Resources>
+				<Style x:Key="searchBoxStyle" TargetType="{x:Type TextBox}">
+					<Setter Property="BorderBrush">
+						<Setter.Value>
+							<ImageBrush/>
+						</Setter.Value>
+					</Setter>
+					<Setter Property="Background">
+						<Setter.Value>
+							<ImageBrush ImageSource="/eReading;component/Images/searchText.png" Stretch="Fill"/>
+						</Setter.Value>
+					</Setter>
+					<Setter Property="Padding" Value="14,1,1,1"/>
+				</Style>
+			</TextBox.Resources>
+		</TextBox>
+		<Button Content="Button" HorizontalAlignment="Right" Width="42" Template="{DynamicResource searchButtonTemplate}" BorderThickness="0" Margin="0,-0.5,0,0.5" Cursor="Hand" IsDefault="True" Name="searchButton">
+			<Button.Resources>
+				<ControlTemplate x:Key="searchButtonTemplate" TargetType="{x:Type Button}">
+					<Grid x:Name="grid">
+						<Grid.Background>
+							<ImageBrush ImageSource="/eReading;component/Images/searchbtn.png"/>
+						</Grid.Background>
+					</Grid>
+					<ControlTemplate.Triggers>
+						<Trigger Property="IsPressed" Value="True">
+							<Setter Property="Background" TargetName="grid">
+								<Setter.Value>
+									<ImageBrush ImageSource="/eReading;component/Images/searchbtn_active.png"/>
+								</Setter.Value>
+							</Setter>
+						</Trigger>
+					</ControlTemplate.Triggers>
+				</ControlTemplate>
+			</Button.Resources>
+		</Button>
+	</Grid>
+</UserControl>

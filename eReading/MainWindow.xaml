@@ -1,0 +1,128 @@
+﻿<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:my="clr-namespace:eReading" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:ee="http://schemas.microsoft.com/expression/2010/effects" xmlns:ed="http://schemas.microsoft.com/expression/2010/drawing" x:Class="eReading.MainWindow"
+        Title="e读书" mc:Ignorable="d" Height="652" Width="987" Closed="Window_Closed" Icon="/eReading;component/Images/appIcon.png" Closing="Window_Closing">
+	<Window.Resources>
+		<Storyboard x:Key="Storyboard1">
+			<DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Opacity)" Storyboard.TargetName="message">
+				<EasingDoubleKeyFrame KeyTime="0" Value="0.2"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1" Value="1"/>
+				<EasingDoubleKeyFrame KeyTime="0:0:1.3" Value="0.195"/>
+			</DoubleAnimationUsingKeyFrames>
+            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="message">
+				<DiscreteObjectKeyFrame KeyTime="0:0:0.3" Value="{x:Static Visibility.Visible}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:1" Value="{x:Static Visibility.Visible}"/>
+				<DiscreteObjectKeyFrame KeyTime="0:0:1.3" Value="{x:Static Visibility.Hidden}"/>
+			</ObjectAnimationUsingKeyFrames>
+		</Storyboard>
+	</Window.Resources>
+    <Grid>
+    	<Grid.Background>
+            <ImageBrush ImageSource="/eReading;component/Images/background.png"/>
+    	</Grid.Background>
+    	<Grid.ColumnDefinitions>
+    		<ColumnDefinition/>
+    	</Grid.ColumnDefinitions>
+
+        <Border BorderThickness="2" Margin="12,104,12,12" CornerRadius="8" Background="#FFF3F4F4" BorderBrush="#FF4B6FE0" d:IsLocked="True">
+            <ScrollViewer x:Name="searchScroll" ScrollViewer.VerticalScrollBarVisibility="Auto" Padding="5">
+
+                <StackPanel x:Name="searchResult"/>
+            </ScrollViewer>
+        </Border>
+        <Button Background="#FF00CCFF" BorderBrush="{x:Null}" BorderThickness="0" Content="下载列表" FontSize="16" FontWeight="Bold" Foreground="White" Height="50" HorizontalAlignment="Right" Margin="0,49.5,67.5,0" x:Name="downloadList" VerticalAlignment="Top" Width="50" Click="downloadList_Click" IsDefault="False" Template="{DynamicResource DownloadListTemple}" RenderTransformOrigin="0.507,0.633" Cursor="Hand" d:IsLocked="True" >
+        	<Button.Resources>
+        		<ControlTemplate x:Key="DownloadListTemple" TargetType="{x:Type Button}">
+        			<Grid x:Name="grid">
+        				<Grid.Background>
+        					<ImageBrush ImageSource="/eReading;component/Images/downloadlist.png" Stretch="Uniform"/>
+        				</Grid.Background>
+        			</Grid>
+        			<ControlTemplate.Triggers>
+        				<Trigger Property="IsPressed" Value="True">
+        					<Setter Property="Background" TargetName="grid">
+        						<Setter.Value>
+        							<ImageBrush ImageSource="/eReading;component/Images/downloadlist_selected.png" Stretch="Uniform"/>
+        						</Setter.Value>
+        					</Setter>
+        				</Trigger>
+        			</ControlTemplate.Triggers>
+        		</ControlTemplate>
+        	</Button.Resources>
+        </Button>
+        <Button Background="#FF00CCFF" ToolTip="关于" BorderBrush="{x:Null}" BorderThickness="0" Content="帮助" FontSize="16" FontWeight="Bold" Foreground="White" Height="50" HorizontalAlignment="Right" Margin="0,49.5,117.5,0" x:Name="helpButton" VerticalAlignment="Top" Width="50" Click="helpButton_Click" Template="{DynamicResource HelpButtonStyle}" Cursor="Hand" d:IsLocked="True" >
+        	<Button.Resources>
+        		<ControlTemplate x:Key="HelpButtonStyle" TargetType="{x:Type Button}">
+        			<Grid x:Name="grid">
+        				<Grid.Background>
+        					<ImageBrush ImageSource="/eReading;component/Images/help.png" Stretch="Uniform"/>
+        				</Grid.Background>
+        			</Grid>
+        			<ControlTemplate.Triggers>
+        				<Trigger Property="IsPressed" Value="True">
+        					<Setter Property="Background" TargetName="grid">
+        						<Setter.Value>
+        							<ImageBrush ImageSource="/eReading;component/Images/help_selected.png" Stretch="Uniform"/>
+        						</Setter.Value>
+        					</Setter>
+        				</Trigger>
+        			</ControlTemplate.Triggers>
+        		</ControlTemplate>
+        	</Button.Resources>
+        </Button>
+        <Button Background="#FF00CCFF" BorderBrush="{x:Null}" BorderThickness="0" ToolTip="设置" FontSize="16" FontWeight="Bold" Foreground="White" Height="55" HorizontalAlignment="Right" Margin="0,47,12,0" x:Name="settings" VerticalAlignment="Top" Width="55" Click="settings_Click" Template="{DynamicResource SettingButtonTemplate}" Cursor="Hand" d:IsLocked="True" >
+        	<Button.Resources>
+        		<ControlTemplate x:Key="SettingButtonTemplate" TargetType="{x:Type Button}">
+        			<Grid x:Name="grid">
+        				<Grid.Background>
+        					<ImageBrush ImageSource="/eReading;component/Images/settings.png" Stretch="Uniform"/>
+        				</Grid.Background>
+        			</Grid>
+        			<ControlTemplate.Triggers>
+        				<Trigger Property="IsPressed" Value="True">
+        					<Setter Property="Background" TargetName="grid">
+        						<Setter.Value>
+        							<ImageBrush ImageSource="/eReading;component/Images/settings_selected.png" Stretch="Uniform"/>
+        						</Setter.Value>
+        					</Setter>
+        				</Trigger>
+        			</ControlTemplate.Triggers>
+        		</ControlTemplate>
+        	</Button.Resources>
+        </Button>
+        <Border VerticalAlignment="Top" CornerRadius="8" BorderThickness="2" BorderBrush="White" Background="#FFDB3A3A" Margin="0,38.3,67,0" HorizontalAlignment="Right" Height="20" Width="25">
+        	<Label Content="{Binding CurrentTask, ElementName=downloadTaskList}" FontWeight="Bold" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="10.667" Padding="0"/>
+        </Border>
+        <my:Help x:Name="help" Margin="12,106,12,12" d:IsLocked="True"/>
+        <Label Content="加载中......" Height="43" x:Name="loadingLabel" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="16" Width="Auto" Foreground="CornflowerBlue" FontWeight="Bold" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Background="#008B6363" Visibility="Hidden" d:IsLocked="True"/>
+        <my:SearchBox Margin="12,56.5,734.5,0" VerticalAlignment="Top" Height="36.5" x:Name="searchBox"  SearchButtonClicked="searchButton_Clicked" HorizontalAlignment="Left" d:IsLocked="True"/>
+        <my:DownloadTaskList Width="Auto" Height="Auto" Visibility="Hidden" x:Name="downloadTaskList" d:IsLocked="True" />
+        <my:BookDetail x:Name="bookDetail1" Width="Auto" Height="Auto" Visibility="Hidden" d:IsLocked="True"/>
+        <my:StrInputBox Width="Auto" Height="Auto" Visibility="Hidden" d:IsLocked="True"/>
+        <my:AlertBox Width="Auto" Height="Auto" Visibility="Hidden" d:IsLocked="True"/>
+        <Label x:Name="message" Content="已添加到下载列表" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0" Style="{DynamicResource LabelStyle1}" BorderThickness="0" Padding="20" FontSize="13.333" FontWeight="Bold" Foreground="White" Background="{DynamicResource {x:Static SystemColors.MenuHighlightBrushKey}}" Visibility="Hidden" d:IsLocked="True">
+        	<Label.Resources>
+        		<Style x:Key="LabelStyle1" TargetType="{x:Type Label}">
+        			<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+        			<Setter Property="Background" Value="Transparent"/>
+        			<Setter Property="Padding" Value="5"/>
+        			<Setter Property="HorizontalContentAlignment" Value="Left"/>
+        			<Setter Property="VerticalContentAlignment" Value="Top"/>
+        			<Setter Property="Template">
+        				<Setter.Value>
+        					<ControlTemplate TargetType="{x:Type Label}">
+        						<Border BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" SnapsToDevicePixels="true" CornerRadius="5">
+        							<ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+        						</Border>
+        						<ControlTemplate.Triggers>
+        							<Trigger Property="IsEnabled" Value="false">
+        								<Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}"/>
+        							</Trigger>
+        						</ControlTemplate.Triggers>
+        					</ControlTemplate>
+        				</Setter.Value>
+        			</Setter>
+        		</Style>
+        	</Label.Resources>
+        </Label>
+    </Grid>
+</Window>
