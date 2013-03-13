@@ -320,7 +320,7 @@ namespace eReading
             retry.Visibility = Visibility.Hidden;
             Status = _statuswhenerror;
             pausestartButton.IsEnabled = true;
-            pausestartButton.IsChecked = true;
+            pausestartButton.IsChecked = false;
             this.Continue();
         }
     }

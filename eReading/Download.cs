@@ -202,6 +202,7 @@ namespace eReading
         public void Continue()
         {
             isStop = false;
+            isError = false;
             StartThread();
             OnProcess();
         }
@@ -210,9 +211,7 @@ namespace eReading
         {
             if (isStop)
                 return;
-            FinishRate = 100.0 * DownloadedPages / _book.PagesNum + FrontPagesNum;
-            if (FinishRate > 99.0)
-                FinishRate = 99.0;
+            FinishRate = 99.0 * DownloadedPages / (_book.PagesNum + FrontPagesNum);
             _progress.Invoke(this);
         }
 
