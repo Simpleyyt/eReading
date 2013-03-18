@@ -159,7 +159,15 @@ namespace eReading
             if (!book.IsReadAll)
             {
                 book.DownloadUrlTemp = String.Format(unreadableDownloadUrl,str,"{0}");
-                string pid = BookDataBase.GetInstance().GetBookPID(book.DXID);
+                string pid = null;
+                try
+                {
+                    pid = BookDataBase.GetInstance().GetBookPID(book.DXID);
+                }
+                catch
+                {
+                    return false;
+                }
                 string regex = @"img\d*/(.*?)/";
                 m = Regex.Match(str, regex);
                 if (pid != null && m.Success)

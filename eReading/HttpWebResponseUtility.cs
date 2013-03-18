@@ -32,10 +32,17 @@ namespace eReading
         {
             Stream stream = CreateGetHttpResponse(url);
             stream.ReadTimeout = 10000;
-            if (stream.CanRead)
-                return Image.FromStream(stream);
-            else
-                throw new Exception("取图片错误");
+            try
+            {
+                if (stream.CanRead)
+                    return Image.FromStream(stream);
+                else
+                    throw new Exception("取图片错误");
+            }
+            catch (ArgumentException e)
+            {
+                return null;
+            }
         }
 
         public static String GetHtmlByHttpWebRequest(String url)
@@ -49,7 +56,7 @@ namespace eReading
             String s = null;
             dispatcher.Dispatcher.Invoke(new Action(() =>
             {
-                
+
                 WebBrowser wb = new WebBrowser();
                 wb.Navigate(url);
                 while (wb.ReadyState != System.Windows.Forms.WebBrowserReadyState.Complete)
@@ -63,7 +70,7 @@ namespace eReading
             return s;
         }
 
-        
+
 
     }
 }

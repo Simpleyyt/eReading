@@ -126,7 +126,7 @@ namespace eReading
             DownloadPath = path;
             _imagepath = Path.Combine(DownloadPath, book.Title);
             Directory.CreateDirectory(_imagepath);
-            MaxTryingTimesWhenFailed = 5;
+            MaxTryingTimesWhenFailed = 10;
             PDFFilePath = Path.Combine(DownloadPath, _book.Title + PDFType);
             _bodypagesinfo = new BodyPagesInfo[ThreadCount - 1];
             for (int i = 0; i < ThreadCount - 1; i++)
@@ -373,12 +373,15 @@ namespace eReading
 
         private bool DownloadPage(string url, string path)
         {
-            Bitmap image = new Bitmap(HttpWebResponseUtility.GetImage(url));
-            System.Drawing.Size size = image.Size;
+            System.Drawing.Image image = HttpWebResponseUtility.GetImage(url);
+            if (image == null)
+                return false;
+            Bitmap bitmap = new Bitmap(image);
+            System.Drawing.Size size = bitmap.Size;
             if (size.Height == 1 && size.Width == 1)
                 return false;
-            removeMark(image);
-            image.Save(path);
+            removeMark(bitmap);
+            bitmap.Save(path);
             return true;
         }
 
