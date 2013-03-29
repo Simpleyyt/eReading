@@ -23,7 +23,7 @@ namespace eReading
             request.Headers.Add("Cookie", Setting.cookies);
             request.UserAgent = "Mozilla/5.0 (Windows NT 6.2) AppleWebKit/537.11 (KHTML, like Gecko) Chrome/23.0.1271.91 Safari/537.11";
             request.KeepAlive = true;
-            request.Timeout = 10000;
+            request.Timeout = 30000;
             HttpWebResponse response = request.GetResponse() as HttpWebResponse;
             return response.GetResponseStream();
         }
@@ -31,7 +31,7 @@ namespace eReading
         public static Image GetImage(String url)
         {
             Stream stream = CreateGetHttpResponse(url);
-            stream.ReadTimeout = 10000;
+            stream.ReadTimeout = 30000;
             try
             {
                 if (stream.CanRead)

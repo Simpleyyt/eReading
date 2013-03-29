@@ -10,6 +10,7 @@ using System.Diagnostics;
 using eReading.DownloadInfo;
 using iTextSharp.text.pdf;
 using iTextSharp.text;
+using System.Drawing.Imaging;
 
 namespace eReading
 {
@@ -18,6 +19,7 @@ namespace eReading
         #region 常量
 
         private Color waterMark = Color.FromArgb(238, 238, 238);
+        private byte[] WaterMark = { 238, 238, 238 };
         private static Hashtable prio = new Hashtable() { { '0', 0 }, { '!', 1 }, { 'f', 2 }, { 'l', 3 }, { 'b', 4 }, { 'c', 5 } };
         private const string arg = "?.&uf=ssr&zoom=0";
         private const string BodyPageFormat = "000000";
@@ -192,10 +194,8 @@ namespace eReading
                 return;
             for (int i = 0; i < _threads.Count(); i++)
             {
-                if (_threads[i] != null && _threads[i] != Thread.CurrentThread && _threads[i].ThreadState == System.Threading.ThreadState.Running)
+                if (_threads[i] != null && _threads[i] != Thread.CurrentThread)
                     _threads[i].Abort();
-                if (_threads[i] != null && _threads[i] != Thread.CurrentThread && _threads[i].ThreadState == System.Threading.ThreadState.Running)
-                    _threads[i].Join();
             }
         }
 
@@ -366,6 +366,7 @@ namespace eReading
                         string errorMsg = String.Format("下载错误", path, url);
                         throw new Exception(errorMsg);
                     }
+                    Thread.Sleep(500);
                 }
             }
             return hasContent;
@@ -385,14 +386,28 @@ namespace eReading
             return true;
         }
 
-        private void removeMark(Bitmap bitmap)
+        private unsafe void removeMark(Bitmap bitmap)
         {
-            for (int y = bitmap.Height / 2; y < bitmap.Height; y++)
-                for (int x = 0; x < bitmap.Width; x++)
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite , PixelFormat.Format24bppRgb  );
+            unsafe
+            {
+                byte* ptr = (byte*)(data.Scan0);
+                for (int y = 0; y < data.Height/2; y++)
                 {
-                    if (bitmap.GetPixel(x, y).Equals(waterMark))
-                        bitmap.SetPixel(x, y, Color.White);
+                    for (int x = 0; x < data.Width; x++)
+                    {
+                        if (ptr[0] == WaterMark[0] && ptr[1] == WaterMark[1] && ptr[2] == WaterMark[2])
+                        {
+                            ptr[0] = 255;
+                            ptr[1] = 255;
+                            ptr[2] = 255;
+                        }
+                        ptr += 3;
+                    }
+                    ptr += data.Stride - data.Width * 3;
                 }
+            }
+            bitmap.UnlockBits(data); 
         }
 
         private void convertPDF()

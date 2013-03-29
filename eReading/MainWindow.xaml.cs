@@ -208,12 +208,9 @@ namespace eReading
         {
             _setting.isClose = true;
             _setting.Close();
-            if(subThread!=null && subThread.ThreadState == ThreadState.Running)
+            if(subThread!=null)
                 subThread.Abort();
-            if (subThread != null && subThread.ThreadState == ThreadState.Running)
-                subThread.Join();
             downloadTaskList.StopTask();
-            //downloadTaskList.SaveToFile();
         }
   
     }

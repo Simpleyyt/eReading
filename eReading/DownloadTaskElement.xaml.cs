@@ -244,10 +244,8 @@ namespace eReading
 
         public void StopTask()
         {
-            if (_subthread != null && _subthread.ThreadState == System.Threading.ThreadState.Running)
+            if (_subthread != null)
                 _subthread.Abort();
-            if (_subthread != null && _subthread.ThreadState == System.Threading.ThreadState.Running)
-                _subthread.Join();
             _download.Stop();
         }
 
