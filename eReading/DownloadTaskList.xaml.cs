@@ -84,9 +84,9 @@ namespace eReading
             for (int i = 0; i < taskList.Children.Count; i++)
             {
                 de = (DownloadTaskElement)taskList.Children[i];
-                if (de.Status == Status.Downloading || de.Status == Status.GettingSTR)
+                if (de.Status == DownloadTaskElement.TaskStatus.Downloading || de.Status == DownloadTaskElement.TaskStatus.GettingSTR)
                     break;
-                if (de.Status == Status.Waiting)
+                if (de.Status == DownloadTaskElement.TaskStatus.Waiting)
                 {
                     de.StartDownload();
                     break;
@@ -104,24 +104,11 @@ namespace eReading
                     downloadelement.StopTask();
                 }
             }
-            //SaveToFile();
         }
 
         private void close_Click(object sender, System.Windows.RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
-        }
-
-        public void SaveToFile()
-        {
-            ConfigureHelper config = new ConfigureHelper("DownloadTaskList.config");
-            config.CreatGrouop("DownloadList");
-            foreach (DownloadTaskElement de in this.taskList.Children)
-            {
-                de.SavePathAndBook(config);
-                de.SaveToFile();
-            }
-            config.Save();
         }
 
         public void AddTaskElement(DownloadTaskElement de)
@@ -140,22 +127,6 @@ namespace eReading
             if (de.isDownloading || de.isError || de.isGettingSTR)
                 StartOneToDownload();
             IsEmpty = (taskList.Children.Count == 0);
-        }
-
-        public void ReadFromFile()
-        {
-            ConfigureHelper config = new ConfigureHelper("DownloadTaskList.config");
-            ConfigurationSectionCollection datas = config.GetValue("DownloadList");
-            int count = datas.Count;
-            for (int i = 0; i < count; i++)
-            {
-                ConfigSectionData data = (ConfigSectionData)datas["add"+i];
-                BookInfo book = new BookInfo();
-                book.FromString(data.BookInfo);
-                DownloadTaskElement de = new DownloadTaskElement(book, this);
-                AddTaskElement(de);
-                de.FromFile(data.Path);
-            }
         }
 
     }

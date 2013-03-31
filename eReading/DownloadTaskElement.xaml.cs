@@ -27,18 +27,18 @@ namespace eReading
     /// <summary>
     /// DownloadElement.xaml 的交互逻辑
     /// </summary>
-    public enum Status { Waiting, GettingSTR, Downloading, Completed, Error };
     public partial class DownloadTaskElement : UserControl
     {
         #region 私有成员
 
+        public enum TaskStatus { Waiting, GettingSTR, Downloading, Completed, Error };
         public BookInfo _book;
         private DownloadTaskList _downloadmanager;
         private Download _download;
         private FinishEventHandler _finish;
         private ExceptionEventHandler _exception;
         private Thread _subthread;
-        private Status _statuswhenerror;
+        private TaskStatus _statuswhenerror;
 
         #endregion
 
@@ -55,38 +55,38 @@ namespace eReading
         {
             get
             {
-                return Status == Status.Completed;
+                return Status == TaskStatus.Completed;
             }
         }
         public bool isError
         {
             get
             {
-                return Status == Status.Error;
+                return Status == TaskStatus.Error;
             }
         }
         public bool isWaiting
         {
             get
             {
-                return Status == Status.Waiting;
+                return Status == TaskStatus.Waiting;
             }
         }
         public bool isGettingSTR
         {
             get
             {
-                return Status == Status.GettingSTR;
+                return Status == TaskStatus.GettingSTR;
             }
         }
         public bool isDownloading
         {
             get
             {
-                return Status == Status.Downloading;
+                return Status == TaskStatus.Downloading;
             }
         }
-        public Status Status { get; set; }
+        public TaskStatus Status { get; set; }
         public BookInfo Book
         {
             get 
@@ -137,7 +137,7 @@ namespace eReading
 
             this.Exception += new ExceptionEventHandler(downloadmanager.Exception);
             this.Finish += new FinishEventHandler(downloadmanager.Finish);
-            this.Status = Status.Waiting;
+            this.Status = TaskStatus.Waiting;
             initUI();
         }
 
@@ -152,7 +152,11 @@ namespace eReading
 
         private void _download_Exception(Download sender, Exception e)
         {
-            this.Dispatcher.Invoke(new Action(() => DownloadFailed(e.Message)));
+            this.Dispatcher.Invoke(new Action(() => 
+                {
+                    DownloadFailed(e.Message);
+                    sender.Stop();
+                }));
         }
 
         private void GetStrThread()
@@ -162,12 +166,18 @@ namespace eReading
                 if (!_book.GetDownloadUrl(this))
                 {
                     String str = null;
+                    ManualResetEvent mre = null;
                     this.Dispatcher.Invoke(new Action(() =>
                         {
-                            str = StrInputBox.showInputBox(_book);
+                            mre = StrInputBox.showInputBox(_book);
 
                         }));
+                    mre.WaitOne();
+                    this.Dispatcher.Invoke(new Action(() =>
+                    {
+                        str = StrInputBox.GetString();
 
+                    }));
                     if (str != null)
                     {
                         _book.GetDownloadUrlByStr(str);
@@ -176,7 +186,7 @@ namespace eReading
                         throw new Exception("找不到STR");
                 }
                 this.Dispatcher.Invoke(new Action(() => status.Content = "正在下载"));
-                Status = Status.Downloading;
+                Status = TaskStatus.Downloading;
                 _download.Start();
             }
             catch (Exception e)
@@ -191,7 +201,7 @@ namespace eReading
         {
             if (isError)
                 return;
-            Status = Status.Completed;
+            Status = TaskStatus.Completed;
             this.Dispatcher.Invoke(new Action(() =>
                 {
                     this.status.Content = "已完成";
@@ -211,7 +221,7 @@ namespace eReading
         public void StartDownload()
         {
             this.progress.Visibility = Visibility.Visible;
-            Status = Status.GettingSTR;
+            Status = TaskStatus.GettingSTR;
             status.Content = "正在获取STR";
             progress.Visibility = Visibility.Visible;
             pausestartButton.IsEnabled = true;
@@ -232,7 +242,7 @@ namespace eReading
         private void DownloadFailed(String errorMsg)
         {
             _statuswhenerror = Status;
-            Status = Status.Error;
+            Status = TaskStatus.Error;
             this.Dispatcher.Invoke(new Action(() =>
                 {
                     this.retry.Visibility = Visibility.Visible;
@@ -267,37 +277,6 @@ namespace eReading
                 StartDownload();
             if (isDownloading)
                 _download.Continue();
-        }
-
-        public void FromFile(String path)
-        {
-            _download.SetPath(path);
-            ConfigureHelper config = new ConfigureHelper(System.IO.Path.Combine(_download.ImagePath, "DownloadInfo.config"));
-            _download.FromString(config.ReadValue("_download"));
-            Status = (Status)Int32.Parse(config.ReadValue("Status"));
-            status.Content = config.ReadValue("status_content");
-            progress.Value = double.Parse(config.ReadValue("progress_value"));
-            if (isComplete)
-            {
-                this.openButtons.Visibility = Visibility.Visible;
-            }
-            if (isDownloading || isGettingSTR)
-            {
-                this.progress.Visibility = Visibility.Visible;
-                this.pausestartButton.IsEnabled = true;
-                this.pausestartButton.IsChecked = true;
-            }
-
-        }
-
-        public void SaveToFile()
-        {
-            ConfigureHelper config = new ConfigureHelper(System.IO.Path.Combine(_download.ImagePath, "DownloadInfo.config"));
-            config.WriteValue("_download", _download.ToString());
-            config.WriteValue("Status", ((int)Status).ToString());
-            config.WriteValue("status_content", status.Content.ToString());
-            config.WriteValue("progress_value", progress.Value.ToString());
-            config.Save();
         }
 
         public void SavePathAndBook(ConfigureHelper config)

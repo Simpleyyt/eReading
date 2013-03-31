@@ -10,6 +10,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Threading;
 
 namespace eReading
 {
@@ -18,6 +19,7 @@ namespace eReading
     /// </summary>
     public partial class StrInputBox : UserControl
     {
+        private static ManualResetEvent mre;
         public static StrInputBox Instance;
         public bool IsCancelClicked { get; set; }
         public bool IsSubmitClicked { get; set; }
@@ -25,38 +27,40 @@ namespace eReading
         {
             InitializeComponent();
             Instance = this;
+            mre = new ManualResetEvent(false);
         }
 
-        public static String showInputBox(BookInfo book)
+        public static ManualResetEvent showInputBox(BookInfo book)
         {
+            mre.Reset();
             Instance.Visibility = Visibility.Visible;
             Instance.IsCancelClicked = false;
             Instance.IsSubmitClicked = false;
             Instance.STR.Text = "";
             Instance.title.Content = book.Title;
             Instance.ssid.Content = "SS号：" + book.SSID;
+            return mre;
+        }
 
-            while (!Instance.IsCancelClicked && !Instance.IsSubmitClicked)
-                System.Windows.Forms.Application.DoEvents();
-
+        public static String GetString()
+        {
             if (Instance.IsSubmitClicked)
                 return Instance.STR.Text;
-            else
-                return null;
+            return null;
         }
 
         private void cancel_Click(object sender, RoutedEventArgs e)
         {
             IsCancelClicked = true;
             this.Visibility = Visibility.Hidden;
+            mre.Set();
         }
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             IsSubmitClicked = true;
             this.Visibility = Visibility.Hidden;
+            mre.Set();
         }
-
-
     }
 }

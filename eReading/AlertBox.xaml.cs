@@ -21,28 +21,29 @@ namespace eReading
 	{
         public static AlertBox Instance ;
         public bool IsSubmitClicked { get; set; }
-
+        public static ManualResetEvent mre;
 		public AlertBox()
 		{
 			this.InitializeComponent();
             Instance = this;
+            mre = new ManualResetEvent(false);
 		}
 
-        public static void Alert(String title, String content)
+        public static ManualResetEvent Alert(String title, String content)
         {
+            mre.Reset();
             Instance.title.Content = title;
             Instance.Msg.Text = content;
             Instance.Visibility = Visibility.Visible;
             Instance.IsSubmitClicked = false;
-            while(!Instance.IsSubmitClicked)
-                System.Windows.Forms.Application.DoEvents();
-            
+            return mre;
         }
 
         private void Submit_Click(object sender, RoutedEventArgs e)
         {
             this.Visibility = Visibility.Hidden;
             IsSubmitClicked = true;
+            mre.Set();
         }
         
 	}

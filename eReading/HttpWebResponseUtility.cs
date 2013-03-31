@@ -9,6 +9,7 @@ using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Windows;
+using System.Threading;
 
 namespace eReading
 {
@@ -53,21 +54,23 @@ namespace eReading
 
         public static String GetHtmlByWebBrowser(String url, DependencyObject dispatcher)
         {
-            String s = null;
+            ManualResetEvent mre = new ManualResetEvent(false);
+            StreamReader stream = null;
             dispatcher.Dispatcher.Invoke(new Action(() =>
             {
-
                 WebBrowser wb = new WebBrowser();
                 wb.Navigate(url);
-                while (wb.ReadyState != System.Windows.Forms.WebBrowserReadyState.Complete)
+                wb.Navigated +=new WebBrowserNavigatedEventHandler((Object sender,WebBrowserNavigatedEventArgs e)=>
                 {
-                    System.Windows.Forms.Application.DoEvents();
-                }
-                Encoding encoding = Encoding.GetEncoding(wb.Document.Encoding);
-                StreamReader stream = new StreamReader(wb.DocumentStream, encoding);
-                s = stream.ReadToEnd();
+                    wb.Stop();
+                    Encoding encoding = Encoding.GetEncoding(wb.Document.Encoding);
+                    stream = new StreamReader(wb.DocumentStream, encoding);
+                    wb.Dispose();
+                    mre.Set();
+                });
             }));
-            return s;
+            mre.WaitOne();
+            return stream.ReadToEnd();
         }
 
 

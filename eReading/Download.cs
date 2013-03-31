@@ -18,6 +18,7 @@ namespace eReading
     {
         #region 常量
 
+        public enum TaskStatus { Preparing, Downloading, Stopped, Completed, Error };
         private Color waterMark = Color.FromArgb(238, 238, 238);
         private byte[] WaterMark = { 238, 238, 238 };
         private static Hashtable prio = new Hashtable() { { '0', 0 }, { '!', 1 }, { 'f', 2 }, { 'l', 3 }, { 'b', 4 }, { 'c', 5 } };
@@ -55,10 +56,29 @@ namespace eReading
 
         #region 属性
 
+        public TaskStatus Status { get; set; }
         public int ThreadCount { get; set; }
-        public bool isComplete { get; private set; }
-        public bool isStop { get; private set; }
-        public bool isError { get; private set; }
+        public bool isCompleted
+        {
+            get
+            {
+                return Status == TaskStatus.Completed;
+            }
+        }
+        public bool isStopped
+        {
+            get
+            {
+                return Status == TaskStatus.Stopped;
+            }
+        }
+        public bool isError
+        {
+            get
+            {
+                return Status == TaskStatus.Error;
+            }
+        }
         public string DownloadPath { get; set; }
         public int DownloadedPage { get; private set; }
         public double FinishRate { get; private set; }
@@ -121,9 +141,6 @@ namespace eReading
         {
             _book = book;
             ThreadCount = 5;
-            isComplete = false;
-            isStop = false;
-            isError = false;
             _lockthis = new object();
             DownloadPath = path;
             _imagepath = Path.Combine(DownloadPath, book.Title);
@@ -134,6 +151,7 @@ namespace eReading
             for (int i = 0; i < ThreadCount - 1; i++)
                 _bodypagesinfo[i] = new BodyPagesInfo();
             _frontpagesinfo = new FrontPagesInfo();
+            Status = TaskStatus.Preparing;
         }
 
         public void SetPath(String path)
@@ -180,37 +198,35 @@ namespace eReading
                 _threads[i].Start(i - 1);
 
             }
+            Status = TaskStatus.Downloading;
         }
 
         public void Stop()
         {
-            if (isComplete)
+            if (isCompleted || isStopped)
                 return;
-            lock (_lockthis)
-            {
-                isStop = true;
-            }
             if (_threads == null)
                 return;
             for (int i = 0; i < _threads.Count(); i++)
             {
-                if (_threads[i] != null && _threads[i] != Thread.CurrentThread)
+                if (_threads[i] != null)
                     _threads[i].Abort();
             }
+            Status = TaskStatus.Stopped;
         }
 
         public void Continue()
         {
-            isStop = false;
-            isError = false;
             StartThread();
             OnProcess();
         }
 
         private void OnProcess()
         {
-            if (isStop)
+            if (isStopped || isError)
                 return;
+            lock (_lockthis)
+                DownloadedPages++;
             FinishRate = 99.0 * DownloadedPages / (_book.PagesNum + FrontPagesNum);
             _progress.Invoke(this);
         }
@@ -219,16 +235,15 @@ namespace eReading
         {
             if (isError)
                 return;
-            Stop();
-            isError = true;
+            Status = TaskStatus.Error;
             _exception.Invoke(this, e);
         }
 
         private void OnFinish()
         {
-            if (isComplete)
+            if (isCompleted || isError || isStopped)
                 return;
-            isComplete = true;
+            Status = TaskStatus.Completed;
             _finished.Invoke(this);
         }
 
@@ -249,38 +264,28 @@ namespace eReading
                     string url = String.Format(_book.DownloadUrl, pageName);
                     string imagefileName = pageName + ImageType;
                     string path = Path.Combine(_imagepath, imagefileName);
-                    try
+                    while (TryToDownload(url, path))
                     {
-                        while (TryToDownload(url, path))
-                        {
-                            page++;
-                            _frontpagesinfo.curPage[part]++;
-                            _frontpagesinfo.DownloadedPages++;
-                            pageName = page.ToString(FrontPageFormat[part]);
-                            url = String.Format(downloadurl, pageName);
-                            imagefileName = pageName + ImageType;
-                            path = Path.Combine(_imagepath, imagefileName);
-                        }
+                        page++;
+                        _frontpagesinfo.curPage[part]++;
+                        _frontpagesinfo.DownloadedPages++;
+                        pageName = page.ToString(FrontPageFormat[part]);
+                        url = String.Format(downloadurl, pageName);
+                        imagefileName = pageName + ImageType;
+                        path = Path.Combine(_imagepath, imagefileName);
                     }
-                    catch (Exception e)
-                    {
-                        if (e is ThreadAbortException)
-                            throw e;
-                        lock (_lockthis)
-                            OnException(e);
-                        return;
-                    }
-                    if (!isStop)
-                        lock (_lockthis) DownloadedPages++;
                     OnProcess();
                 }
-                if (!isStop)
-                    ThreadComplete();
+                ThreadComplete();
+            }
+            catch (ThreadAbortException e)
+            {
+                throw;
             }
             catch (Exception e)
             {
-                if (e is ThreadAbortException)
-                    return;
+                lock (_lockthis)
+                    OnException(e);
             }
         }
 
@@ -297,42 +302,34 @@ namespace eReading
                     string imagefileName = pageName + ImageType;
                     string path = Path.Combine(_imagepath, imagefileName);
 
-                    try
+                    int tryingtimes = 0;
+                    while (!TryToDownload(url, path))
                     {
-                        int tryingtimes = 0;
-                        while (!TryToDownload(url, path))
+                        if (++tryingtimes > MaxTryingTimesWhenFailed)
                         {
-                            if (++tryingtimes > MaxTryingTimesWhenFailed)
-                            {
-                                string errorMsg = String.Format("页{0}是空的", page);
-                                throw new Exception(errorMsg);
-                            }
+                            string errorMsg = String.Format("页{0}是空的", page);
+                            throw new Exception(errorMsg);
                         }
                     }
-                    catch (Exception e)
-                    {
-                        if (e is ThreadAbortException)
-                            throw e;
-                        lock(_lockthis)
-                            OnException(e);
-                        return;
-                    }
-                    if (!isStop)
-                        lock (_lockthis) DownloadedPages++;
                     OnProcess();
                 }
-                if (!isStop)
-                    ThreadComplete();
+                ThreadComplete();
+            }
+            catch (ThreadAbortException e)
+            {
+                throw;
             }
             catch (Exception e)
             {
-                if (e is ThreadAbortException)
-                    return;
+                lock (_lockthis)
+                    OnException(e);
             }
         }
 
         private void ThreadComplete()
         {
+            if (isStopped || isError)
+                return;
             lock (_lockthis)
             {
                 if (++_completethread == ThreadCount)
@@ -349,7 +346,7 @@ namespace eReading
             int currentTryingTimes = 0;
             bool success = false;
             bool hasContent = true;
-            while (!success && !isStop)
+            while (!success && !isStopped)
             {
                 try
                 {
@@ -388,10 +385,11 @@ namespace eReading
 
         private unsafe void removeMark(Bitmap bitmap)
         {
-            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite , PixelFormat.Format24bppRgb  );
+            BitmapData data = bitmap.LockBits(new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height), ImageLockMode.ReadWrite, PixelFormat.Format24bppRgb);
             unsafe
             {
                 byte* ptr = (byte*)(data.Scan0);
+                ptr += data.Stride * (data.Height / 2);
                 for (int y = 0; y < data.Height/2; y++)
                 {
                     for (int x = 0; x < data.Width; x++)
@@ -407,7 +405,7 @@ namespace eReading
                     ptr += data.Stride - data.Width * 3;
                 }
             }
-            bitmap.UnlockBits(data); 
+            bitmap.UnlockBits(data);
         }
 
         private void convertPDF()
@@ -436,14 +434,14 @@ namespace eReading
                     PdfContentByte pdfcontent = pdfWrite.DirectContent;
                     AddBookContents(pdfWrite, pdfcontent.RootOutline, content);
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     if (e is ThreadAbortException)
                         throw e;
                 }
                 Directory.Delete(_imagepath, true);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 if (e is ThreadAbortException)
                     throw e;
@@ -451,7 +449,7 @@ namespace eReading
             }
             finally
             {
-                if (document!=null && document.IsOpen())
+                if (document != null && document.IsOpen())
                     document.Close();
             }
         }
@@ -477,32 +475,6 @@ namespace eReading
             }
             else
                 return ((int)prio[file2.Name[0]]).CompareTo((int)prio[file1.Name[0]]);
-        }
-
-        public override String ToString()
-        {
-            String str = "";
-            str += ThreadCount + "|";
-            str += DownloadedPages + "|";
-            str += _frontpagesinfo + "|";
-            foreach (BodyPagesInfo b in _bodypagesinfo)
-                str += b + "|";
-            return str;
-        }
-
-        public void FromString(String str)
-        {
-            String[] strlist = str.Split('|');
-            int i = 0;
-            ThreadCount = Int32.Parse(strlist[i++]);
-            DownloadedPages = Int32.Parse(strlist[i++]);
-            _frontpagesinfo = new FrontPagesInfo();
-            _frontpagesinfo.FromString(strlist[i++]);
-
-            for (int j = 0; j < ThreadCount - 1; j++)
-            {
-                _bodypagesinfo[j].FromString(strlist[i++]);
-            }
         }
     }
 }
