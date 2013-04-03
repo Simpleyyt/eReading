@@ -1,4 +1,3 @@
-![](./eReading/Images/appIcon.png)
 eReading v1.2
 ==================
 
