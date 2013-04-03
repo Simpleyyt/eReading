@@ -14,7 +14,7 @@ eReading v1.2
 
 * 有些书需要STR才能下载，什么是STR？怎么获得？
 <br/>有了STR才知道读秀图书的真实下载地址。
-    自带的数据库毕竟有限，可以上淘宝买STR，告诉其SSID就行了。
+    自带的数据库毕竟有限，可以上淘宝买STR，告诉其SS号就行了。
 
 * STR数据库哪里有？
 <br/>直接向我要吧。
@@ -34,7 +34,7 @@ eReading v1.2
 <br/>因为作者不想写了。╮(╯▽╰)╭
 
 * 发现BUG怎么办？
-<br/>我的邮箱:simpleyyt@gmail.com
+<br/>我的邮箱：simpleyyt@gmail.com
 
 更新日志
 ---------
