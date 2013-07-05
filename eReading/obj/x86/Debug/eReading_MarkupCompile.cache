@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\Project\VS2010\eReading\eReading\obj\x86\Debug\
+C:\Users\Administrator\Desktop\ereading\eReading\obj\x86\Debug\
 eReading
 none
 false
 DEBUG;TRACE
-D:\Project\VS2010\eReading\eReading\App.xaml
+C:\Users\Administrator\Desktop\ereading\eReading\App.xaml
 11-815593290
 
 25-1032035366
-23-1766940958
+231819569171
 AlertBox.xaml;BookDetail.xaml;BookElement.xaml;DownloadTaskElement.xaml;DownloadTaskList.xaml;Help.xaml;LoadingMoreElement.xaml;MainWindow.xaml;SearchBox.xaml;Setting.xaml;StrInputBox.xaml;
 
 False

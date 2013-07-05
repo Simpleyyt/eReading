@@ -186,7 +186,7 @@ namespace eReading
         public static String GetPdgHost(String did)
         {
             String source = HttpWebResponseUtility.GetHtmlByHttpWebRequest(PdgPathSever);
-            string regexStr = String.Format("{0}.*?<td>(.*?)</td>",did);
+            string regexStr = String.Format("<td>{0}</td><td>(.*?)</td>",did);
             Match m = Regex.Match(source, regexStr);
             if (m.Success)
                 return m.Groups[1].Value;
